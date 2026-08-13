@@ -26,13 +26,13 @@ Match the goal to a category, then the skill, then load that leaf's `SKILL.md`.
 - `expo-project-structure` — folder layout for a **new** Expo Router project: where screens, components, and config live (never restructure an existing app to match)
 - `expo-native-ui` — screens, styling, semantic colors, native controls, SF Symbols, media, animations, layout
 - `expo-router` — navigation: file-based routes, tabs / stacks / modals / sheets, links, headers
-- `expo-ui` — native UI components via `@expo/ui`: BottomSheet, Picker, Slider, Button, Menu, Section, and more — real SwiftUI on iOS, Jetpack Compose on Android, available in Expo Go on SDK 56+; also drop-in replacements for `@gorhom/bottom-sheet`, `datetimepicker`, etc.
+- `expo-ui` — native UI components via `@expo/ui`: BottomSheet, Picker, Slider, Switch, Menu, Button, FieldGroup (grouped form sections), List / ListItem, and more — real SwiftUI on iOS, Jetpack Compose on Android. The universal layer needs SDK 56+ and runs in Expo Go; the drop-in replacements (`@gorhom/bottom-sheet`, `datetimepicker`, …) and platform-specific layers also exist on SDK 55.
 - `expo-tailwind-setup` — Tailwind / NativeWind styling
 - `expo-data-fetching` — network requests, React Query / SWR, caching, offline, route loaders
 - `expo-dom` — run web code or reuse a web library inside native
 - `expo-web-to-native` — migrate an existing web / React app to a native iOS / Android app
 
-> **Component selection rule:** whenever you need a UI component (list rows, bottom sheets, pickers, sliders, menus, buttons, segmented controls, toggles), **consult `expo-ui` first** to check whether `@expo/ui` has a native equivalent before reaching for a React Native built-in or a community library. Native `@expo/ui` components give the best platform fit with zero extra install steps on SDK 56+. Load `expo-ui` alongside `expo-native-ui` for any app that renders lists, detail sheets, or form controls.
+> **Component selection rule:** whenever you need a UI component (list rows, bottom sheets, pickers, sliders, menus, buttons, segmented controls, toggles), **consult `expo-ui` first** to check whether `@expo/ui` has a native equivalent before reaching for a React Native built-in or a community library. Native `@expo/ui` components give the best platform fit, and on SDK 56+ the universal ones run in Expo Go with no custom build. Load `expo-ui` alongside `expo-native-ui` for any app that renders lists, detail sheets, or form controls. One exception: `@expo/ui` `List` renders native grouped rows (an iOS Settings screen), **not** a virtualized list — use `FlatList` / `FlashList` for large datasets.
 
 **Ship & operate**
 - `eas-app-stores` — build and submit to the App Store / Play Store / TestFlight, versions, and store metadata
