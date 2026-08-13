@@ -21,7 +21,8 @@ name: skill-eval-main-baseline
 
 # Must match skill-eval-ci.yml and eval-harness's own workflows -- a baseline
 # authored or analyzed on a different toolchain is not comparable with the
-# PR-side result it is cached for.
+# PR-side result it is cached for. The authoring model is part of that same
+# contract, and both workflows read it from AGENT_MODEL in scripts/ci.sh.
 defaults:
   image: sdk-57
   tools:

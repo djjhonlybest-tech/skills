@@ -2,6 +2,7 @@
 # Authors+evaluates 3 PRDs vs main and this PR. "_main" jobs cache via
 # fingerprint+restore_cache; only skill-eval-main-baseline.yml writes that
 # cache. Logic in scripts/*: EAS caps workflow files at 16 KiB.
+# Authoring model: AGENT_MODEL in scripts/ci.sh, shared by both workflows.
 name: skill-eval-ci
 
 # Must match eval-harness's own .eas/workflows/*.yml. The skill analyzer is

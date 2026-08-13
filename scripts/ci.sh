@@ -9,6 +9,20 @@
 # functions that DO need strict-failure semantics wrap their own body in a
 # `(set -euo pipefail; ...)` subshell instead of relying on a global option.
 
+# Authoring model for every skill-eval job, on both the PR and the main side.
+# Observed on standard 200k-context models: the plugin's skill descriptions
+# don't reach Claude Code's skill menu, so no skill auto-triggers and every
+# trigger cell reads 0 whatever the PR changed. The 1M variant keeps the menu
+# intact. Needs 1M-context access on the CI Claude account.
+#
+# Lives here, not as job env in .eas/workflows/*.yml: EAS caps those at 16 KiB
+# and skill-eval-ci.yml has ~150 bytes of headroom. One definition also makes
+# it impossible for the two workflows to drift onto different models -- the
+# model is part of the cache fingerprint (see ci.py), so a mismatch silently
+# invalidates every cached main baseline. A job env AGENT_MODEL still wins.
+: "${AGENT_MODEL:=sonnet[1m]}"
+export AGENT_MODEL
+
 # Configures the (private, token-scoped) eval-harness submodule fetch and
 # initializes it. Called by every function below that needs eval-harness.
 fetch_eval_harness() {
@@ -40,8 +54,8 @@ install_harness_deps() {
 #   checkout: use $(pwd)/plugins/expo directly (skill-eval-main-baseline.yml,
 #             already checked out on main).
 #
-# Requires PRD, PRD_ID, SCENARIO, AGENT, AGENT_MODEL, EVAL_HARNESS_ACCESS_TOKEN
-# in env (already set as job env vars / repo secrets).
+# Requires PRD, PRD_ID, SCENARIO, AGENT, EVAL_HARNESS_ACCESS_TOKEN in env
+# (already set as job env vars / repo secrets); AGENT_MODEL is defaulted above.
 fingerprint_main_content() {
   (
     set -euo pipefail
@@ -81,7 +95,7 @@ fingerprint_main_content() {
       --prd-id "${PRD_ID}" \
       --scenario "${SCENARIO}" \
       --agent "${AGENT}" \
-      --model "${AGENT_MODEL:-sonnet}"
+      --model "${AGENT_MODEL}"
   )
 }
 
