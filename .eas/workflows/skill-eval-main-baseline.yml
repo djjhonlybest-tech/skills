@@ -19,6 +19,15 @@
 # that merge) is still the real win.
 name: skill-eval-main-baseline
 
+# Must match skill-eval-ci.yml and eval-harness's own workflows -- a baseline
+# authored or analyzed on a different toolchain is not comparable with the
+# PR-side result it is cached for.
+defaults:
+  image: sdk-57
+  tools:
+    bun: '1.3.14'
+    node: '22.20.0'
+
 on:
   push:
     branches:
@@ -46,9 +55,7 @@ jobs:
 
       - name: compute main fingerprint
         id: fingerprint
-        run: |
-          bash scripts/ci.sh fingerprint_main_content checkout > fingerprint-notes-main.json
-          set-output fingerprint "$(python3 -c "import json; print(json.load(open('fingerprint-notes-main.json'))['fingerprint'])")"
+        run: set-output fingerprint "$(bash scripts/ci.sh write_fingerprint checkout fingerprint-notes-main.json)"
 
       - name: restore cached main baseline
         uses: eas/restore_cache
@@ -113,9 +120,7 @@ jobs:
 
       - name: compute main fingerprint
         id: fingerprint
-        run: |
-          bash scripts/ci.sh fingerprint_main_content checkout > fingerprint-hot_chocolate-main.json
-          set-output fingerprint "$(python3 -c "import json; print(json.load(open('fingerprint-hot_chocolate-main.json'))['fingerprint'])")"
+        run: set-output fingerprint "$(bash scripts/ci.sh write_fingerprint checkout fingerprint-hot_chocolate-main.json)"
 
       - name: restore cached main baseline
         uses: eas/restore_cache
@@ -177,9 +182,7 @@ jobs:
 
       - name: compute main fingerprint
         id: fingerprint
-        run: |
-          bash scripts/ci.sh fingerprint_main_content checkout > fingerprint-wiki_reader-main.json
-          set-output fingerprint "$(python3 -c "import json; print(json.load(open('fingerprint-wiki_reader-main.json'))['fingerprint'])")"
+        run: set-output fingerprint "$(bash scripts/ci.sh write_fingerprint checkout fingerprint-wiki_reader-main.json)"
 
       - name: restore cached main baseline
         uses: eas/restore_cache
